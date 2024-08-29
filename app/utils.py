@@ -6,4 +6,5 @@ def hash(pw: str):
     return pwd_context.hash(pw)
 
 def verify(pw:str, hash_pw:str):
+    
     return pwd_context.verify(pw,hash_pw)
