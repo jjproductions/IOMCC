@@ -22,23 +22,23 @@ def create_access_token(sub: dict, expires_delta: timedelta | None = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.algorithm)
     return encoded_jwt
-
+    
 def verify_access_token(token:str, credentials_exception):
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.algorithm])
         print(f"verify token:payload: {payload}")
-        id: str = payload.get("sub")
-        print(f"verify token:email: {id}")
-        if not id:
+        email: str = payload.get("sub")
+        print(f"verify token:email: {email}")
+        if not email:
             raise credentials_exception
-        
-        token_data = schemas.TokenData(id=id)
+            
+        token_data = schemas.TokenData(email=email)
     except InvalidTokenError:
         raise credentials_exception
-    
+        
     return token_data
 
-def verify_access_role(auth_data, role_exception, db: Session = Depends(get_db)):
+''' def verify_access_role(auth_data, role_exception, db: Session = Depends(get_db)):
     #try catch
     #email = verify_access_token
     role_id = auth_data.get("role")
@@ -57,15 +57,16 @@ def verify_access_role(auth_data, role_exception, db: Session = Depends(get_db))
     token_data = True
     
     
-    return token_data
+    return token_data   '''
 
 def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     credentials_exception = HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Could not validate credentials", headers={"WWW-Authenticate":"Bearer"})
 
     print(f"get current user-token: {token}")
     return verify_access_token(token, credentials_exception)
+    
 
-def is_authorized(auth_data:str):  #role: int, email: str):
+""" def is_authorized(auth_data:str):  #role: int, email: str):
     role_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials", headers={"WWW-Authenticate":"Bearer"})
 
-    return verify_access_role(auth_data, role_exception)
+    return verify_access_role(auth_data, role_exception) """

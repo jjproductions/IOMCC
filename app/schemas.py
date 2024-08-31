@@ -62,7 +62,7 @@ class Token(BaseModel):
     token_type:str
 
 class TokenData(BaseModel):
-    id:Optional[str] = None
+    email:Optional[str] = None
 
 class TokenRoleData(BaseModel):
     role:Optional[str] = None

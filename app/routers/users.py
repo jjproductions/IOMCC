@@ -12,7 +12,7 @@ router = APIRouter(
 
 #, current_user: int = Depends(oauth2.get_current_user)
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_user(post: schemas.UserCreate, db: Session = Depends(get_db)) -> schemas.UserCreateOut:
+async def create_user(post: schemas.UserCreate, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)) -> schemas.UserCreateOut:
     unauth_exception =  HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authorized for this action", headers={"WWW-Authenticate":"Bearer"})
     #print (f"Created by: {current_user}")
     #if not current_user:
