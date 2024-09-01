@@ -46,61 +46,10 @@ while dbConnectAttempts > 0:
 @app.get("/")
 def root():
     #print (os.getenv("DB_IOM_USER"))
-    return {"message": "Hello World"}
-
-
-@app.get("/gettypes")
-async def get_posts(db: Session = Depends(get_db)):
-    posts = db.query(models.Type_DB).all()
-    if not posts:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"no types exist")
-
-    #print(posts)
-    return {"data": posts}
-
-
-# title str, content str, published bool
-@app.post("/posts", response_model=schemas.UserBase)
-def get_posts(my_posts: schemas.UserBase, db: Session = Depends(get_db)):
-    new_post = models.UserAuth_DB(**my_posts.model_dump())
-    db.add(new_post)
-    db.commit()
-    db.refresh(new_post)
-
-    print(new_post)
-    #print(new_post.model_dump())
-    conn.commit()
-    #if my_posts == None:
-     #   raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="post call requires a json body")
-
-    return {"data": new_post}
-
-@app.put("/posts/{id}", response_model=schemas.UserBase)
-def update_post(id:int, post: Post):
-    cursor.execute(""" UPDATE "Products" SET name=%s, price=%s, inventory=%s, is_sale=%s WHERE id = %s 
-                   RETURNING *""", (post.name, post.price, post.inventory, post.sale, id))
-    updated_post = cursor.fetchone()
-
-    
-
-    if updated_post == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"invalid id: {id}")
-    else:
-        conn.commit()
-    return {"data": updated_post}
+    return {"message": "The Institute of Music for Children"}
 
 
 
-@app.delete("/posts/{id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_post(id:int):
-    cursor.execute(""" DELETE FROM "Products" WHERE id = %s RETURNING * """, (str(id),))
-    deleted_post = cursor.fetchone()
-    if deleted_post == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"invalid id: {id}")
-    else:
-        conn.commit()
-    
-    return{status.HTTP_204_NO_CONTENT}
 
 
 
